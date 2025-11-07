@@ -518,6 +518,13 @@ Default Values' button.
     # Resume the dumping of python instructions
     smesh.ResumePythonDumpRecording()
 
+    input_id = maStudy.FindObjectByName(self.MeshIn,"SMESH")[0].GetID()
+    result_id = SOMesh.GetID()
+
+    smesh.AddToPythonScript("mmg = blah\n") # if mmg not defined, we hit "not created Object" by 2smeshpy because mmg is not in the presentObjects() registry
+
+    smesh.AddToPythonScript(f"{result_id} = mmg.remesh({input_id})\n")
+
     if salome.sg.hasDesktop(): salome.sg.updateObjBrowser()
     self.num+=1
     return True
