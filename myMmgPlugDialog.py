@@ -444,7 +444,7 @@ Default Values' button.
     # Resume the dumping of python instructions
     smesh.ResumePythonDumpRecording()
 
-    smesh.AddToPythonScript("# Instruction added in PBOKPressed after Resuming python dumping")
+    smesh.AddToPythonScript("# MMG Plugin : instruction added in PBOKPressed after Resuming python dumping")
     smesh.AddToPythonScript("# Mesh_MMG = ... TBD")
 
     self.fichierIn = CpyFichierIn
@@ -569,8 +569,8 @@ Default Values' button.
     mySObject, myEntry = guihelper.getSObjectSelected()
 
     print(f"Dumping entry : {myEntry}")
-    smesh.AddToPythonScript("# Instruction added in PBMeshSmeshPressed")
-    smesh.AddToPythonScript("# Test dumping an object identified by its entry")
+    smesh.AddToPythonScript("# MMG Plugin : Instruction added in PBMeshSmeshPressed")
+    smesh.AddToPythonScript("# MMG Plugin : Test dumping an object identified by its entry")
     smesh.AddToPythonScript(str(myEntry)+"\n") # equivalent to smesh.AddToPythonScript('0:1:3:3')
     
     if CORBA.is_nil(mySObject) or mySObject==None:
