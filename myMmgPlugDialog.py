@@ -393,6 +393,13 @@ Default Values' button.
     self.values.AnalysisAndRepair(self.CB_GenRepair.isChecked() or self.CB_RepairOnly.isChecked())
 
   def PBOKPressed(self):
+    from salome.kernel import salome
+    from salome.smesh import smeshBuilder
+    smesh = smeshBuilder.New()
+
+    # Block the dumping of instructions in python script until ResumePythonDumpRecording()
+    smesh.PausePythonDumpRecording()
+
     if self.fichierIn=="" and self.MeshIn=="":
       QMessageBox.critical(self, "Mesh", "select an input mesh")
       return False
@@ -434,6 +441,12 @@ Default Values' button.
       if (not self.CB_GenRepair.isChecked()) and self.values is not None:
         self.values.DeleteMesh()
 
+    # Resume the dumping of python instructions
+    smesh.ResumePythonDumpRecording()
+
+    smesh.AddToPythonScript("# Instruction added in PBOKPressed after Resuming python dumping")
+    smesh.AddToPythonScript("# Mesh_MMG = ... TBD")
+
     self.fichierIn = CpyFichierIn
     self.MeshIn = CpyMeshIn
     self.__selectedMesh = CpySelectedMesh
@@ -446,6 +459,9 @@ Default Values' button.
     from salome.kernel.salome.kernel import studyedit
     from salome.smesh import smeshBuilder
     smesh = smeshBuilder.New()
+
+    # Block the dumping of instructions in python script until ResumePythonDumpRecording()
+    smesh.PausePythonDumpRecording()
 
     if not os.path.isfile(self.fichierOut):
       QMessageBox.warning(self, "Compute", "Result file "+self.fichierOut+" not found")
@@ -499,6 +515,9 @@ Default Values' button.
     newLink=monStudyBuilder.NewObject(SOMesh)
     monStudyBuilder.Addreference(newLink, newStudyIter)
 
+    # Resume the dumping of python instructions
+    smesh.ResumePythonDumpRecording()
+
     if salome.sg.hasDesktop(): salome.sg.updateObjBrowser()
     self.num+=1
     return True
@@ -548,6 +567,12 @@ Default Values' button.
     smesh = smeshBuilder.New()
 
     mySObject, myEntry = guihelper.getSObjectSelected()
+
+    print(f"Dumping entry : {myEntry}")
+    smesh.AddToPythonScript("# Instruction added in PBMeshSmeshPressed")
+    smesh.AddToPythonScript("# Test dumping an object identified by its entry")
+    smesh.AddToPythonScript(str(myEntry)+"\n") # equivalent to smesh.AddToPythonScript('0:1:3:3')
+    
     if CORBA.is_nil(mySObject) or mySObject==None:
       QMessageBox.critical(self, "Mesh", "select an input mesh")
       return
